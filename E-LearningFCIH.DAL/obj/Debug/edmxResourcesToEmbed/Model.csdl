@@ -1,0 +1,337 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="User_Subject">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="SubjectID" Type="Int32" Nullable="false" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="SubjectStatus" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="Subject" Relationship="Model.FK_User_Subject_Subject" FromRole="User_Subject" ToRole="Subject" />
+    <NavigationProperty Name="User" Relationship="Model.FK_User_Subject_Users" FromRole="User_Subject" ToRole="User" />
+  </EntityType>
+  <EntityType Name="UserGroup">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="GroupName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Users" Relationship="Model.FK_Users_UserGroup" FromRole="UserGroup" ToRole="User" />
+  </EntityType>
+  <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <EntitySet Name="User_Subject" EntityType="Self.User_Subject" />
+    <EntitySet Name="UserGroups" EntityType="Self.UserGroup" />
+    <EntitySet Name="Subjects" EntityType="Model.Subject" />
+    <AssociationSet Name="FK_User_Subject_Subject" Association="Model.FK_User_Subject_Subject">
+      <End Role="Subject" EntitySet="Subjects" />
+      <End Role="User_Subject" EntitySet="User_Subject" />
+    </AssociationSet>
+    <EntitySet Name="Answers" EntityType="Model.Answer" />
+    <EntitySet Name="User_Quiz" EntityType="Model.User_Quiz" />
+    <EntitySet Name="Users" EntityType="Model.User" />
+    <AssociationSet Name="FK_User_Quiz_Users" Association="Model.FK_User_Quiz_Users">
+      <End Role="User" EntitySet="Users" />
+      <End Role="User_Quiz" EntitySet="User_Quiz" />
+    </AssociationSet>
+    <AssociationSet Name="FK_User_Subject_Users" Association="Model.FK_User_Subject_Users">
+      <End Role="User" EntitySet="Users" />
+      <End Role="User_Subject" EntitySet="User_Subject" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_UserGroup" Association="Model.FK_Users_UserGroup">
+      <End Role="UserGroup" EntitySet="UserGroups" />
+      <End Role="User" EntitySet="Users" />
+    </AssociationSet>
+    <EntitySet Name="User_Doctor" EntityType="Model.User_Doctor" />
+    <AssociationSet Name="FK_User_Doctor_Users" Association="Model.FK_User_Doctor_Users">
+      <End Role="User" EntitySet="Users" />
+      <End Role="User_Doctor" EntitySet="User_Doctor" />
+    </AssociationSet>
+    <EntitySet Name="Materials" EntityType="Model.Material" />
+    <EntitySet Name="Messages" EntityType="Model.Message" />
+    <EntitySet Name="Attendances" EntityType="Model.Attendance" />
+    <EntitySet Name="Lectures" EntityType="Model.Lecture" />
+    <EntitySet Name="Quizs" EntityType="Model.Quiz" />
+    <AssociationSet Name="FK_Answer_Quiz" Association="Model.FK_Answer_Quiz">
+      <End Role="Quiz" EntitySet="Quizs" />
+      <End Role="Answer" EntitySet="Answers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Attendance_Quiz" Association="Model.FK_Attendance_Quiz">
+      <End Role="Quiz" EntitySet="Quizs" />
+      <End Role="Attendance" EntitySet="Attendances" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Attendance_Users" Association="Model.FK_Attendance_Users">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Attendance" EntitySet="Attendances" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Lecture_Subject" Association="Model.FK_Lecture_Subject">
+      <End Role="Subject" EntitySet="Subjects" />
+      <End Role="Lecture" EntitySet="Lectures" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Quiz_Subject" Association="Model.FK_Quiz_Subject">
+      <End Role="Subject" EntitySet="Subjects" />
+      <End Role="Quiz" EntitySet="Quizs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_User_Quiz_Quiz" Association="Model.FK_User_Quiz_Quiz">
+      <End Role="Quiz" EntitySet="Quizs" />
+      <End Role="User_Quiz" EntitySet="User_Quiz" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Subject">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SubjectNames" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Boolean" />
+    <NavigationProperty Name="User_Subject" Relationship="Model.FK_User_Subject_Subject" FromRole="Subject" ToRole="User_Subject" />
+    <NavigationProperty Name="Lectures" Relationship="Model.FK_Lecture_Subject" FromRole="Subject" ToRole="Lecture" />
+    <NavigationProperty Name="Quizs" Relationship="Model.FK_Quiz_Subject" FromRole="Subject" ToRole="Quiz" />
+  </EntityType>
+  <Association Name="FK_User_Subject_Subject">
+    <End Type="Model.Subject" Role="Subject" Multiplicity="1" />
+    <End Type="Model.User_Subject" Role="User_Subject" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subject">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="User_Subject">
+        <PropertyRef Name="SubjectID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Answer">
+    <Key>
+      <PropertyRef Name="AnswerID" />
+    </Key>
+    <Property Name="AnswerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="QuizID" Type="Int32" Nullable="false" />
+    <Property Name="QuestionText" Type="String" MaxLength="400" FixedLength="true" Unicode="true" />
+    <Property Name="AnswerValue" Type="Int32" />
+    <NavigationProperty Name="Quiz" Relationship="Model.FK_Answer_Quiz" FromRole="Answer" ToRole="Quiz" />
+  </EntityType>
+  <EntityType Name="User_Quiz">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="QuizID" Type="Int32" />
+    <Property Name="AnswerValue" Type="Int32" />
+    <NavigationProperty Name="User" Relationship="Model.FK_User_Quiz_Users" FromRole="User_Quiz" ToRole="User" />
+    <NavigationProperty Name="Quiz" Relationship="Model.FK_User_Quiz_Quiz" FromRole="User_Quiz" ToRole="Quiz" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="UserGroupID" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Phone" Type="Int32" />
+    <Property Name="Bio" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="User_Quiz" Relationship="Model.FK_User_Quiz_Users" FromRole="User" ToRole="User_Quiz" />
+    <NavigationProperty Name="User_Subject" Relationship="Model.FK_User_Subject_Users" FromRole="User" ToRole="User_Subject" />
+    <NavigationProperty Name="UserGroup" Relationship="Model.FK_Users_UserGroup" FromRole="User" ToRole="UserGroup" />
+    <NavigationProperty Name="User_Doctor" Relationship="Model.FK_User_Doctor_Users" FromRole="User" ToRole="User_Doctor" />
+    <NavigationProperty Name="Attendances" Relationship="Model.FK_Attendance_Users" FromRole="User" ToRole="Attendance" />
+  </EntityType>
+  <Association Name="FK_User_Quiz_Users">
+    <End Type="Model.User" Role="User" Multiplicity="1" />
+    <End Type="Model.User_Quiz" Role="User_Quiz" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="User_Quiz">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_User_Subject_Users">
+    <End Type="Model.User" Role="User" Multiplicity="1" />
+    <End Type="Model.User_Subject" Role="User_Subject" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="User_Subject">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_UserGroup">
+    <End Type="Model.UserGroup" Role="UserGroup" Multiplicity="1" />
+    <End Type="Model.User" Role="User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserGroup">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="UserGroupID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="User_Doctor">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="DoctorID" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="User" Relationship="Model.FK_User_Doctor_Users" FromRole="User_Doctor" ToRole="User" />
+  </EntityType>
+  <Association Name="FK_User_Doctor_Users">
+    <End Type="Model.User" Role="User" Multiplicity="1" />
+    <End Type="Model.User_Doctor" Role="User_Doctor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="User_Doctor">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Material">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Link" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SubjectID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="Message">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="SubjectID" Type="Int32" Nullable="false" />
+    <Property Name="MessageBody" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="Attendance">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="QuizID" Type="Int32" Nullable="false" />
+    <Property Name="StudentID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Quiz" Relationship="Model.FK_Attendance_Quiz" FromRole="Attendance" ToRole="Quiz" />
+    <NavigationProperty Name="User" Relationship="Model.FK_Attendance_Users" FromRole="Attendance" ToRole="User" />
+  </EntityType>
+  <EntityType Name="Lecture">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="DrID" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Link" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SubjectID" Type="Int32" />
+    <Property Name="StartsOn" Type="DateTime" Precision="3" />
+    <Property Name="EndsOn" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Subject" Relationship="Model.FK_Lecture_Subject" FromRole="Lecture" ToRole="Subject" />
+  </EntityType>
+  <EntityType Name="Quiz">
+    <Key>
+      <PropertyRef Name="QuizID" />
+    </Key>
+    <Property Name="QuizID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="Deadline" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Answers" Relationship="Model.FK_Answer_Quiz" FromRole="Quiz" ToRole="Answer" />
+    <NavigationProperty Name="Attendances" Relationship="Model.FK_Attendance_Quiz" FromRole="Quiz" ToRole="Attendance" />
+    <NavigationProperty Name="Subject" Relationship="Model.FK_Quiz_Subject" FromRole="Quiz" ToRole="Subject" />
+    <NavigationProperty Name="User_Quiz" Relationship="Model.FK_User_Quiz_Quiz" FromRole="Quiz" ToRole="User_Quiz" />
+  </EntityType>
+  <Association Name="FK_Answer_Quiz">
+    <End Type="Model.Quiz" Role="Quiz" Multiplicity="1" />
+    <End Type="Model.Answer" Role="Answer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Quiz">
+        <PropertyRef Name="QuizID" />
+      </Principal>
+      <Dependent Role="Answer">
+        <PropertyRef Name="QuizID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Attendance_Quiz">
+    <End Type="Model.Quiz" Role="Quiz" Multiplicity="1" />
+    <End Type="Model.Attendance" Role="Attendance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Quiz">
+        <PropertyRef Name="QuizID" />
+      </Principal>
+      <Dependent Role="Attendance">
+        <PropertyRef Name="QuizID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Attendance_Users">
+    <End Type="Model.User" Role="User" Multiplicity="1" />
+    <End Type="Model.Attendance" Role="Attendance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Attendance">
+        <PropertyRef Name="StudentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Lecture_Subject">
+    <End Type="Model.Subject" Role="Subject" Multiplicity="0..1" />
+    <End Type="Model.Lecture" Role="Lecture" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subject">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Lecture">
+        <PropertyRef Name="SubjectID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Quiz_Subject">
+    <End Type="Model.Subject" Role="Subject" Multiplicity="1" />
+    <End Type="Model.Quiz" Role="Quiz" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subject">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Quiz">
+        <PropertyRef Name="ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_User_Quiz_Quiz">
+    <End Type="Model.Quiz" Role="Quiz" Multiplicity="0..1" />
+    <End Type="Model.User_Quiz" Role="User_Quiz" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Quiz">
+        <PropertyRef Name="QuizID" />
+      </Principal>
+      <Dependent Role="User_Quiz">
+        <PropertyRef Name="QuizID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

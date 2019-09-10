@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "StudentsRequests";
+    var Currentusr = (E_LearningFCIH.DAL.User)Session["_CurrentFCIHUser"];
+    E_LearningFCIH.DAL.Entities db = new E_LearningFCIH.DAL.Entities();
+    db.Configuration.ProxyCreationEnabled = false;
+    var RequestResult = db.User_Doctor.Where(x => x.DoctorID == Currentusr.ID && x.Status.Trim() == "Request").ToList();
+    var RejectResult = db.User_Doctor.Where(x => x.DoctorID == Currentusr.ID && x.Status.Trim() == "Reject").ToList();
+    var ConfirmedResult = db.User_Doctor.Where(x => x.DoctorID == Currentusr.ID && x.Status.Trim() == "Confirm").ToList();
+}
+
+<h2>StudentsRequests</h2>
+
+<script src="~/js/jquery.js"></script>
+<script type="text/javascript">
+
+    function changeRequestStatus(userrID, status) {
+
+        $.ajax({
+            url: "/Students/changeRequestStatusForDr",
+            type: "POST",
+            data: { "userrID": userrID, "status": status }
+
+        });
+
+    }
+</script>
+
+<div class="jumbotron">
+    <h3 style="color:darkorange">Requests (@RequestResult.Count)</h3>
+    @if (RequestResult.Count > 0)
+    {
+        foreach (var item in RequestResult)
+        {
+            string name=db.Users.Where(x=>x.ID==item.UserID).FirstOrDefault().Username;
+            <h3 style="color:black">From :@name</h3>
+    <input type="button" name="name" value="Approve" onclick="changeRequestStatus('@item.UserID','Approve');" />
+    <input type="button" name="name" value="Reject" onclick="changeRequestStatus('@item.UserID','Reject');" />
+        }
+    }
+    else
+    {
+        <h5 style="color:black">No New Requests !</h5>
+    }
+</div>
+
+<div class="jumbotron">
+    <h3  style="color:green">Confirmed (@ConfirmedResult.Count)</h3>
+
+    @foreach (var item in ConfirmedResult)
+    {
+        string name = db.Users.Where(x => x.ID == item.UserID).FirstOrDefault().Username;
+        <h3 style="color:black">From :@name</h3>
+    }
+</div>
+<div class="jumbotron">
+    <h3 style="color:red">Rejected (@RejectResult.Count)</h3>
+    @foreach (var item in RejectResult)
+    {
+        string name = db.Users.Where(x => x.ID == item.UserID).FirstOrDefault().Username;
+        <h3 style="color:black">From :@name</h3>
+    }
+</div>

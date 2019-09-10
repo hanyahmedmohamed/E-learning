@@ -1,0 +1,112 @@
+﻿
+
+@{
+    ViewBag.Title = "Users";
+}
+
+<h2>Users</h2>
+
+
+
+<div id="UsersTable"></div>
+@section Scripts{
+    
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-ui.js"></script>
+<script src="~/Scripts/jtable/jquery.jtable.min.js"></script>
+
+<link href="~/Scripts/jtable/themes/metro/blue/jtable.css" rel="stylesheet" />
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        
+        $('#UsersTable').jtable({
+            title: 'The User List',
+            paging: true, //Enable paging
+            pageSize: 10, //Set page size (default: 10)
+            sorting: true, //Enable sorting
+            defaultSorting: 'Name ASC', //Set default sorting
+            actions: {
+                listAction: '/Administration/GetUsers',
+                deleteAction: '/Administration/Delete',
+                updateAction: '/Administration/Update',
+                createAction: '/Administration/Create'
+            },
+            fields: {
+                ID: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                Username: {
+                    title: 'Name',
+                    width: '23%'
+                },
+                //EmailAddress: {
+                //    title: 'Email address',
+                //    list: false
+                //},
+                Password: {
+                    title: 'User Password',
+                    type: 'password',
+                    list: true
+                },
+                Status: {
+                    title: 'Status',
+                    width: '13%',                   
+                    options: { Request: 'Request', Approve: 'Approve' }
+                },
+
+                UserGroupID: {
+                    title: 'Role',
+                    width: '12%',
+                    options: '/Administration/GetGroups'
+                },
+                //BirthDate: {
+                //    title: 'Birth date',
+                //    width: '15%',
+                //    type: 'date',
+                //    displayFormat: 'yy-mm-dd'
+                //},
+                //Education: {
+                //    title: 'Education',
+                //    list: false,
+                //    type: 'radiobutton',
+                //    options: {
+                //        '1': 'Primary school',
+                //        '2': 'High school',
+                //        '3': 'University'
+                //    }
+                //},
+                //About: {
+                //    title: 'About this person',
+                //    type: 'textarea',
+                //    list: false
+                //},
+                //IsActive: {
+                //    title: 'Status',
+                //    width: '12%',
+                //    type: 'checkbox',
+                //    values: { 'false': 'Passive', 'true': 'Active' },
+                //    defaultValue: 'true'
+                //},
+                //RecordDate: {
+                //    title: 'Record date',
+                //    width: '15%',
+                //    type: 'date',
+                //    displayFormat: 'dd.mm.yy',
+                //    create: false,
+                //    edit: false,
+                //    sorting: false //This column is not sortable!
+                //}
+            }
+        });
+
+        //Load student list from server
+        $('#UsersTable').jtable('load');
+    });
+
+</script>
+}

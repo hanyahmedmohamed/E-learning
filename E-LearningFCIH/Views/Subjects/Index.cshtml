@@ -1,0 +1,186 @@
+﻿
+@{
+    ViewBag.Title = "View";
+}
+
+<h2>Subjects</h2>
+
+
+
+<div id="subjectsTable"></div>
+@section Scripts{
+
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <script src="~/Scripts/jtable/jquery.jtable.min.js"></script>
+<link href="~/Scripts/jtable/themes/basic/jtable_basic.css" rel="stylesheet" />
+<link href="~/Scripts/jtable/themes/lightcolor/blue/jtable.min.css" rel="stylesheet" />
+@*<link href="~/scripts/jtable/themes/jqueryui/jtable_jqueryui.css" rel="stylesheet" />*@
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap.js"></script>
+    <link href="~/Scripts/jtable/themes/metro/blue/jtable.css" rel="stylesheet" />
+    @*<style type="text/css">
+        /*div.ui-dialog.ui-widget{
+            margin-left:500px !important;
+            color:gray;
+            
+            background-color:gray;
+            
+
+        }*/
+
+    </style>*@
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#subjectsTable').jtable({
+            title: 'The Subjects List',
+            paging: true, //Enable paging
+            pageSize: 10, //Set page size (default: 10)
+            sorting: true, //Enable sorting
+            defaultSorting: 'Name ASC', //Set default sorting
+            actions: {
+                listAction: '/Subjects/Getsubjects',
+              //  deleteAction: '/Subjects/Delete',
+                updateAction: '/Subjects/Update',
+                createAction: '/Subjects/Create'
+            },
+            fields: {
+                ID: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                Quiz: {
+                    title: '',
+                    width: '5%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    display: function (studentData) {
+                        //Create an image that will be used to open child table
+                        var $img = $('<img src="/Content/images/Misc/note.png" title=" Quiz" />');
+                        //Open child table when user clicks the image
+                        $img.click(function () {
+                            $('#subjectsTable').jtable('openChildTable',
+                                    $img.closest('tr'),
+                                    {
+                                        title: studentData.record.SubjectNames + ' - Quiz',
+                                        actions: {
+                                            listAction: '/Subjects/quizList?ID=' + studentData.record.ID,
+                                           // deleteAction: '/Subjects/DeleteQuiz',
+                                            //updateAction: '/Demo/UpdatePhone',
+                                            createAction: '/Subjects/CreateQuiz'
+                                        },
+                                        fields: {
+                                            //recordAdded: function (event, data) {
+                                            //    $('#subjectsTable').jtable('reload');
+                                            //},
+                                            ID: {
+                                                type: 'hidden',
+                                                defaultValue: studentData.record.ID
+                                            },
+                                            QuizID: {
+                                                key: true,
+                                                create: false,
+                                                edit: false,
+                                                list: false
+                                            },
+                                          
+                                            Answer: {
+                                                title: '',
+                                                width: '5%',
+                                                sorting: false,
+                                                edit: false,
+                                                create: false,
+                                                display: function (studentData) {
+                                                    //Create an image that will be used to open child table
+                                                    var $img = $('<img src="/Content/images/Misc/note.png" title="Answer" />');
+                                                    //Open child table when user clicks the image
+                                                    $img.click(function () {
+                                                        $('#subjectsTable').jtable('openChildTable',
+                                                                $img.closest('tr'),
+                                                                {
+                                                                    title: studentData.record.Name + ' - Quiz Question',
+                                                                    actions: {
+                                                                        listAction: '/Subjects/quizAnswers?ID=' + studentData.record.QuizID,
+                                                                       // deleteAction: '/Subjects/DeleteQuiz',
+                                                                        //updateAction: '/Demo/UpdatePhone',
+                                                                        createAction: '/Subjects/CreateAnswer'
+                                                                    },
+                                                                    fields: {
+                                                                        QuizID: {
+                                                                            type: 'hidden',
+                                                                            defaultValue: studentData.record.QuizID
+                                                                        },
+                                                                        AnswerID: {
+                                                                            key: true,
+                                                                            create: false,
+                                                                            edit: false,
+                                                                            list: false
+                                                                        },
+                                                                        QuestionText: {
+                                                                            title: 'Title',
+                                                                            width: '30%',
+
+                                                                        },
+                                                                        AnswerValue: {
+                                                                            title: 'Answer',
+                                                                            options: { '1': 'True', '2': 'False' }
+
+                                                                        },
+
+
+                                                                    }
+                                                                }, function (data) { //opened handler
+                                                                    data.childTable.jtable('load');
+                                                                });
+                                                    });
+                                                    //Return image to show on the person row
+                                                    return $img;
+                                                }
+                                            },
+                                            Name: {
+                                                title: 'Title',
+                                                width: '30%',
+
+                                            },
+                                            Deadline: {
+                                                title: 'Deadline',
+                                                type:'date',
+                                                width: '30%',
+
+                                            },
+                                        }
+                                    }, function (data) { //opened handler
+                                        data.childTable.jtable('load');
+                                    });
+                        });
+                        //Return image to show on the person row
+                        return $img;
+                    }
+                },
+                SubjectNames: {
+                    title: 'Name',
+                    width: '23%'
+                },
+                Status: {
+                    title: 'Status',
+                    width: '12%',
+                    type: 'checkbox',
+                    values: { 'false': 'Close', 'true': 'Open' },
+                    defaultValue: 'true'
+                },
+               
+            }
+        });
+
+        //Load student list from server
+        $('#subjectsTable').jtable('load');
+    });
+
+    </script>
+}

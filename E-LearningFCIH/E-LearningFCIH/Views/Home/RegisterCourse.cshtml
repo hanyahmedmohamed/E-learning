@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "RegisterCourse";
+    E_LearningFCIH.DAL.Entities entity = new E_LearningFCIH.DAL.Entities();
+    var usr = (E_LearningFCIH.DAL.User)Session["_CurrentFCIHUser"];
+    List<int> userSubjects = entity.User_Subject.Where(x => x.UserID == usr.ID).Select(x=>x.SubjectID).ToList();
+    var source = entity.Subjects.Where(y => y.Status==true && !userSubjects.Contains(y.ID)).Select(x => new { ID = x.ID, Name = x.SubjectNames });
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+@using (Html.BeginForm("RegisterCourse", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+   
+    <h4>Register Courses</h4>
+    <hr />
+    <div class="form-group">
+        <h6 style="color:white">First Course</h6>
+        <select name="firstSubject" title="First Subject">
+            @foreach (var item in source)
+        {
+                <option value="@item.ID">@item.Name</option>
+        }
+
+        </select>
+        </div>
+    <div class="form-group">
+        <h6 style="color:white">Second Course</h6>
+        <select name="secondSubject" title="Second Subject">
+            @foreach (var item in source)
+        {
+                <option value="@item.ID">@item.Name</option>
+        }
+
+        </select>
+        </div>
+    <div class="form-group">
+        <h6 style="color:white">Third Course</h6>
+        <select name="thirdSubject" title="Third Subject">
+            @foreach (var item in source)
+            {
+                <option value="@item.ID">@item.Name</option>
+            }
+
+        </select>
+    </div>
+    <div class="form-group">
+        <h6 style="color:white">Fourth Course</h6>
+        <select name="fourthSubject" title="Fourth Subject">
+            @foreach (var item in source)
+        {
+                <option value="@item.ID">@item.Name</option>
+        }
+
+        </select>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-default" value="Register" />
+            </div>
+        </div>
+        }
+
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }

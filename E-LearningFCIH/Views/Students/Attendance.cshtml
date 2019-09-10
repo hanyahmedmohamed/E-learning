@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Attendance";
+    E_LearningFCIH.DAL.Entities db = new E_LearningFCIH.DAL.Entities();
+    List<E_LearningFCIH.DAL.Lecture> lectures = new List<E_LearningFCIH.DAL.Lecture>();
+    var usr = (E_LearningFCIH.DAL.User)Session["_CurrentFCIHUser"];
+    List<int> userSubjects = db.User_Subject.Where(x => x.UserID == usr.ID).Select(x => x.SubjectID).ToList();
+    var source = db.Subjects.Where(y => userSubjects.Contains(y.ID)).Select(x => new { ID = x.ID, Name = x.SubjectNames });
+}
+
+<h2>Attendance</h2>
+@foreach (var item in source)
+{
+    <div class="jumbotron">
+        <h3>@item.Name Lectures</h3>
+        @{lectures = db.Lectures.Where(x => x.SubjectID == item.ID).ToList();
+        }
+        @foreach (var Litem in lectures)
+        {
+            if (!string.IsNullOrEmpty(Litem.Link))
+            {
+                <h5>@Litem.Title</h5>
+                <iframe src="@Litem.Link"></iframe>
+            }
+
+        }
+        @*<iframe src="https://www.youtube.com/watch?v=_QguoUKqFVo"></iframe>*@
+        @* <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Show more &raquo;</a></p>*@
+    </div>
+}
+<br />

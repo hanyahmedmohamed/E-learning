@@ -1,0 +1,15 @@
+C:\Users\Sherif\Documents\Visual Studio 2013\Projects\E-LearningFCIH\E-LearningFCIH.DAL\bin\Debug\E-LearningFCIH.DAL.dll.config
+C:\Users\Sherif\Documents\Visual Studio 2013\Projects\E-LearningFCIH\E-LearningFCIH.DAL\bin\Debug\E-LearningFCIH.DAL.dll
+C:\Users\Sherif\Documents\Visual Studio 2013\Projects\E-LearningFCIH\E-LearningFCIH.DAL\bin\Debug\E-LearningFCIH.DAL.pdb
+C:\Users\Sherif\Documents\Visual Studio 2013\Projects\E-LearningFCIH\E-LearningFCIH.DAL\bin\Debug\EntityFramework.dll
+C:\Users\Sherif\Documents\Visual Studio 2013\Projects\E-LearningFCIH\E-LearningFCIH.DAL\bin\Debug\EntityFramework.xml
+C:\Users\Sherif\Documents\Visual Studio 2013\Projects\E-LearningFCIH\E-LearningFCIH.DAL\obj\Debug\E-LearningFCIH.DAL.dll
+C:\Users\Sherif\Documents\Visual Studio 2013\Projects\E-LearningFCIH\E-LearningFCIH.DAL\obj\Debug\E-LearningFCIH.DAL.pdb
+C:\Users\Sherif\Documents\Visual Studio 2013\Projects\E-LearningFCIH\E-LearningFCIH.DAL\obj\Debug\E-LearningFCIH.DAL.csprojResolveAssemblyReference.cache
+F:\E-LearningFCIH\E-LearningFCIH.DAL\bin\Debug\E-LearningFCIH.DAL.dll.config
+F:\E-LearningFCIH\E-LearningFCIH.DAL\bin\Debug\E-LearningFCIH.DAL.dll
+F:\E-LearningFCIH\E-LearningFCIH.DAL\bin\Debug\E-LearningFCIH.DAL.pdb
+F:\E-LearningFCIH\E-LearningFCIH.DAL\bin\Debug\EntityFramework.dll
+F:\E-LearningFCIH\E-LearningFCIH.DAL\bin\Debug\EntityFramework.xml
+F:\E-LearningFCIH\E-LearningFCIH.DAL\obj\Debug\E-LearningFCIH.DAL.dll
+F:\E-LearningFCIH\E-LearningFCIH.DAL\obj\Debug\E-LearningFCIH.DAL.pdb

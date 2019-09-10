@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "Quizzes";
+
+    E_LearningFCIH.DAL.Entities db = new E_LearningFCIH.DAL.Entities();
+    var usr = (E_LearningFCIH.DAL.User)Session["_CurrentFCIHUser"];
+    List<int> userSubjects = db.User_Subject.Where(x => x.UserID == usr.ID).Select(x => x.SubjectID).ToList();
+    List<int?> userAnswers = db.User_Quiz.Where(x => x.UserID == usr.ID).Select(x => x.QuizID).ToList();
+    
+    var source = db.Quizs.Where(y => y.Deadline >= DateTime.Today && userSubjects.Contains(y.ID)).Select(x => new { ID = x.QuizID, Name = x.Name, SubjectID = x.ID }).ToList();
+    List<E_LearningFCIH.DAL.Answer> qs = new List<E_LearningFCIH.DAL.Answer>();
+
+}
+<script src="~/js/jquery.js"></script>
+<script type="text/javascript">
+
+    function submitAnswer(o, s) {
+        debugger;
+        var ss=document.getElementById(o);
+        $.ajax({
+            url: "/Students/SolveQuiz",
+            type: "POST",
+            data: { "answer": ss.value, "quizId": s }
+
+        });
+    }
+</script>
+<h2>Quizzes</h2>
+
+@if (source.Count > 0)
+{
+    foreach (var item in source)
+    {
+        int tempID = item.SubjectID;
+        string subjectName = db.Subjects.Where(x => x.ID == tempID).FirstOrDefault().SubjectNames;
+        
+    
+        <div class="jumbotron">
+            <h3>@subjectName</h3>
+            <h2>@item.Name</h2>
+
+            @{
+
+        qs = db.Answers.Where(x => x.QuizID == item.ID && !userAnswers.Contains(item.ID)).ToList();
+
+        if (qs != null && qs.Count > 0)
+        {
+            <h4>Please Select The Correct Answer !</h4>
+                <select id="@item.Name" style="width:300px">
+                    @foreach (var q in qs)
+                    {
+
+                        <option value="@q.AnswerID">@q.QuestionText</option>
+
+
+                    }
+                </select>
+                <br /> <input type="button" name="Submit" value="Submit " onclick="submitAnswer('@item.Name','@item.ID');" />
+        }
+        else
+        {
+            <h4>This Quiz Doesn't Have Answers Or Solved Before !</h4>
+        }
+
+            }
+
+
+        </div>
+    }
+
+}
+else
+{
+    <h2>No Quizzes For Today !</h2>
+}
+<br />

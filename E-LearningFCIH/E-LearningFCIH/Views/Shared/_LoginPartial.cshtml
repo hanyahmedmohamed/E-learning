@@ -1,0 +1,76 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+        </ul>
+    }
+}
+else
+{
+    var usr = (E_LearningFCIH.DAL.User)Session["_CurrentFCIHUser"];
+    if (usr == null)
+    {
+        <ul class="nav navbar-nav navbar-right">
+            <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+
+        </ul>
+    }
+    else
+    {
+        <ul class="nav navbar-nav navbar-right">
+            @if (usr.UserGroupID == 1)
+            {
+                <li class="menuItem">@Html.ActionLink("Home", "PreHome", "Home")</li>
+                <li class="menuItem">@Html.ActionLink("Register Course", "RegisterCourse", "Home")</li>
+                <li class="menuItem">@Html.ActionLink("Quizzes", "Quizzes", "Students")</li>
+                <li class="menuItem">@Html.ActionLink("Result", "Result", "Students")</li>
+                <li class="menuItem">@Html.ActionLink("Materials", "ViewMaterials", "Students")</li>
+                <li class="menuItem">@Html.ActionLink("Chat", "Chat", "Chat")</li>
+                <li class="menuItem">@Html.ActionLink("Logout", "Logout", "Home")</li>
+
+            }
+            @if (usr.UserGroupID == 2)
+            {
+                <li class="menuItem">@Html.ActionLink("Home", "PreHome", "Home")</li>
+                <li class="menuItem">@Html.ActionLink("Requests", "StudentsRequests", "Students")</li>
+                <li class="menuItem">@Html.ActionLink("Attendance", "AttendanceReport", "Subjects")</li>
+                <li class="menuItem">@Html.ActionLink("Materials", "Materials", "Subjects")</li>
+                <li class="menuItem">@Html.ActionLink("Chat", "Chat", "Chat")</li>
+                <li class="menuItem">@Html.ActionLink("Logout", "Logout", "Home")</li>
+
+            }
+            @if (usr.UserGroupID == 3)
+            {
+                <li class="menuItem">@Html.ActionLink("Home", "PreHome", "Home")</li>
+                <li class="menuItem">@Html.ActionLink("Register Course", "RegisterCourse", "Home")</li>
+                <li class="menuItem">@Html.ActionLink("Quizzes", "Quizzes", "Students")</li>
+                <li class="menuItem">@Html.ActionLink("Result", "Result", "Students")</li>
+                <li class="menuItem">@Html.ActionLink("Doctors", "ViewDoctors", "Students")</li>
+                <li class="menuItem">@Html.ActionLink("Materials", "ViewMaterials", "Students")</li>
+                <li class="menuItem">@Html.ActionLink("Chat", "Chat", "Chat")</li>
+                <li class="menuItem">@Html.ActionLink("Logout", "Logout", "Home")</li>
+            }
+            @if (usr.UserGroupID == 4)
+            {
+                <li class="menuItem">@Html.ActionLink("Home", "PreHome", "Home")</li>
+                <li class="menuItem">@Html.ActionLink("Subjects", "Index", "Subjects")</li>
+                <li class="menuItem">@Html.ActionLink("Materials", "Materials", "Subjects")</li>
+                <li class="menuItem">@Html.ActionLink("Lectures", "Index", "Lectures")</li>
+                <li class="menuItem">@Html.ActionLink("Doctors", "Doctors", "Administration")</li>
+                <li class="menuItem">@Html.ActionLink("Notification", "Notification", "Administration")</li>
+                <li class="menuItem">@Html.ActionLink("Users", "Users", "Administration")</li>
+                <li class="menuItem">@Html.ActionLink("Logout", "Logout", "Home")</li>
+            }
+
+        </ul>
+    }
+}

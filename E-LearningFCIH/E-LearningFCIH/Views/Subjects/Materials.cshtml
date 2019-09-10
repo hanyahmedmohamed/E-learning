@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "Materials";
+}
+
+<h2>Materials</h2>
+
+<div id="UsersTable"></div>
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-ui.js"></script>
+<script src="~/Scripts/jtable/jquery.jtable.min.js"></script>
+
+<link href="~/Scripts/jtable/themes/metro/blue/jtable.css" rel="stylesheet" />
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#UsersTable').jtable({
+            title: 'The Materials List',
+            paging: true, //Enable paging
+            pageSize: 10, //Set page size (default: 10)
+            sorting: true, //Enable sorting
+            defaultSorting: 'Name ASC', //Set default sorting
+            actions: {
+                listAction: '/Subjects/GetMaterials',
+                deleteAction: '/Subjects/DeleteMaterials',
+                updateAction: '/Subjects/UpdateMaterials',
+                createAction: '/Subjects/CreateMaterials'
+            },
+            fields: {
+                ID: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                Description: {
+                    title: 'Description',
+                    width: '23%'
+                },
+             
+                Link: {
+                    title: 'Link',
+                    width: '23%'
+                },
+             
+                SubjectID: {
+                    title: 'Subject',
+                    width: '12%',
+                    options: '/Subjects/GetSubjectsList'
+                },
+                
+            }
+        });
+
+        //Load student list from server
+        $('#UsersTable').jtable('load');
+    });
+
+</script>
+}

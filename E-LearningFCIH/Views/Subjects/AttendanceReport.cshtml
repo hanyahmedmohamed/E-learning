@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "AttendanceReport";
+    var usr = (E_LearningFCIH.DAL.User)Session["_CurrentFCIHUser"];
+    E_LearningFCIH.DAL.Entities db = new E_LearningFCIH.DAL.Entities();
+    db.Configuration.ProxyCreationEnabled = false;
+    List<int> userSubjects = db.User_Subject.Where(x => x.UserID == usr.ID).Select(x => x.SubjectID).ToList();
+    //y.Status == true
+    var source = db.Subjects.Where(y => userSubjects.Contains(y.ID)).Select(x => new { ID = x.ID, Name = x.SubjectNames });
+    var quizzes = db.Quizs.Where(x => userSubjects.Contains(x.ID)).ToList();
+}
+
+<h2>AttendanceReport</h2>
+
+<div class="jumbotron">
+
+    @foreach (var item in source)
+    {
+        <h3 style="font-weight:bold">@item.Name</h3>
+        var subjectQuizzes = quizzes.Where(x => x.ID == item.ID).ToList();
+        if (subjectQuizzes.Count>0)
+        {
+        foreach (var qitem in subjectQuizzes)
+        {
+            <h4>Quiz: @qitem.Name</h4>
+            var attendanceUsers = db.Attendances.Where(x => x.QuizID == qitem.QuizID).Select(y => y.StudentID).ToList();
+            var users = db.Users.Where(x => attendanceUsers.Contains(x.ID)).ToList();
+            if (users.Count > 0)
+            {
+                foreach (var uitem in users)
+                {
+                    <h5 style="color:green">@uitem.Username</h5>
+                }
+            }
+            else
+            {
+                <h5 style="color:red">None Attended !</h5>
+
+            }
+
+        }
+        }
+        else
+        {
+            <h5 style="color:red">No Attendances !</h5>
+        }
+        <br />
+    }
+</div>

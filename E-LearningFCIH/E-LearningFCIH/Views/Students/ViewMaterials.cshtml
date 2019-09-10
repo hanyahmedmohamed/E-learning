@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "ViewMaterials";
+    E_LearningFCIH.DAL.Entities entity = new E_LearningFCIH.DAL.Entities();
+    var usr = (E_LearningFCIH.DAL.User)Session["_CurrentFCIHUser"];
+    List<int> userSubjects = entity.User_Subject.Where(x => x.UserID == usr.ID).Select(x => x.SubjectID).ToList();
+
+}
+
+<h2>Materials</h2>
+
+<div class="jumbotron" >
+    @if (userSubjects.Count == 0)
+    {
+        <h3 style="color:red">No Materials To Display !</h3>
+    }
+    else
+    {
+        foreach (var item in userSubjects)
+        {
+            string name = entity.Subjects.Where(x => x.ID == item).FirstOrDefault().SubjectNames;
+            <h3>@name</h3>
+
+            var materials = entity.Materials.Where(x => x.SubjectID == item).ToList();
+            if (materials.Count == 0)
+            {
+                <h3 style="color:red">No Materials To Display !</h3>
+            }
+            else
+            {
+                foreach (var materialItem in materials)
+                {
+                    <h5>@materialItem.Description</h5>
+                    <a href="@materialItem.Link">Get</a>
+                }
+            }
+        }
+    }
+</div>

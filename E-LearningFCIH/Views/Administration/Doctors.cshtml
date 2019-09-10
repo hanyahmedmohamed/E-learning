@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "Doctors";
+}
+
+<h2>Doctors</h2>
+
+
+
+<div id="UsersTable"></div>
+@section Scripts{
+
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <script src="~/Scripts/jtable/jquery.jtable.min.js"></script>
+
+    <link href="~/Scripts/jtable/themes/metro/blue/jtable.css" rel="stylesheet" />
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#UsersTable').jtable({
+            title: 'The User List',
+            paging: true, //Enable paging
+            pageSize: 10, //Set page size (default: 10)
+            sorting: true, //Enable sorting
+            defaultSorting: 'Name ASC', //Set default sorting
+            actions: {
+                listAction: '/Administration/GetDoctors',
+                
+                updateAction: '/Administration/UpdateDoctor',
+                
+            },
+            fields: {
+                ID: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                Username: {
+                    title: 'Name',
+                    width: '23%',
+                    edit:false
+                },
+               
+                SubjectID: {
+                    title: 'Role',
+                    width: '12%',
+                    options: '/Administration/GetSubjectsList'
+                },
+               
+            }
+        });
+
+        //Load student list from server
+        $('#UsersTable').jtable('load');
+    });
+
+    </script>
+}

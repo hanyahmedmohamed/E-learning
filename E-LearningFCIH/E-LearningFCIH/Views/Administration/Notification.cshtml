@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Notification";
+    E_LearningFCIH.DAL.Entities db = new E_LearningFCIH.DAL.Entities();
+    var subjects = db.Subjects.Where(x=>x.Status==true).ToList();
+}
+
+<h2>Notification</h2>
+
+<script src="~/js/jquery.js"></script>
+<script type="text/javascript">
+    function Notify() {
+        
+       var id= document.getElementById('sbjcts');
+        var msg=document.getElementById('msg');
+        $.ajax({
+            url: "/Administration/Notifications",
+            type: "POST",
+            data: { "SubjectID": id.value,"Message":msg.value }
+
+        });
+        window.location.href = '/Students/Profile';
+    }
+</script>
+<div>
+    Subject:
+    <select id="sbjcts">
+
+        @foreach (var item in subjects)
+        {
+            <option value="@item.ID">@item.SubjectNames</option>
+        }
+    </select><br/>
+    <br/>
+
+    Message:
+    <input type="text" name="msg" id="msg"   style="width:500px;height:200px"/><br /><br />
+
+           <input type="button" name="submit" value="Send"  onchange="Notify();"/>
+</div>

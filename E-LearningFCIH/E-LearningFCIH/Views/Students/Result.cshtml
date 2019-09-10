@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "Result";
+
+    List<E_LearningFCIH.CustomClasses.Result> result = new List<E_LearningFCIH.CustomClasses.Result>();
+    var usr = (E_LearningFCIH.DAL.User)Session["_CurrentFCIHUser"];
+  
+
+    result = new E_LearningFCIH.CustomClasses.Result().Evaluate(usr.ID);
+    var subjectResult = new E_LearningFCIH.CustomClasses.Result().EvaluateSubjects(usr.ID).GroupBy(x => x.SubjectName).ToList();
+    string subjectName = "";
+    int studentScore = 0;
+    int subjectScore = 0;
+
+
+}
+
+
+<script src="~/js/jquery.js"></script>
+<script src="~/jsPDF-master/jspdf.js"></script>
+<script src="~/jsPDF-master/dist/jspdf.debug.js"></script>
+<script>
+    var doc = new jsPDF();
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
+
+    function print() {
+        doc.fromHTML($('#content').html(), 15, 15, {
+            'width': 170,
+            'elementHandlers': specialElementHandlers
+        });
+        doc.save('sample-file.pdf');
+
+
+    }
+
+</script>
+
+<h2>Result</h2>
+
+<h2>Marks !</h2>
+
+<div id="content">
+    <table>
+        @*<tr><td>FCIH E-Learning Certificate</td></tr>*@
+        <tr>
+            <td>Subject</td>
+            <td>Score</td>
+            <td>Total</td>
+        </tr>
+       
+
+        @for (int i = 0; i < subjectResult.Count; i++)
+        {
+
+            subjectName = subjectResult[i].Distinct().FirstOrDefault().SubjectName;
+
+
+            studentScore = 0;
+            subjectScore = 0;
+            foreach (var item in subjectResult[i])
+            {
+                studentScore += item.StudentSubjectScore;
+                subjectScore += item.SubjectTotalScore;
+            }
+            <tr>
+                <td>@subjectName</td>
+                <td>@studentScore</td>
+                <td>@subjectScore</td>
+            </tr>
+        }
+
+    </table>
+</div>
+<div id="contents" class="jumbotron">
+    @foreach (var item in result)
+    {
+        <h2>@item.Quiz</h2>
+        if (item.StudentScore == item.TotalScore)
+        {
+            <h4 style="color:green">Student Score :@item.StudentScore</h4>
+            <h4 style="color:green">Total Score @item.TotalScore</h4>
+        }
+        else
+        {
+            <h4 style="color:red">Student Score :@item.StudentScore</h4>
+            <h4 style="color:red">Total Score @item.TotalScore</h4>
+        }
+
+
+    }
+</div>
+<div id="editor"></div>
+<button id="cmd" onclick="print();">Full Result</button>

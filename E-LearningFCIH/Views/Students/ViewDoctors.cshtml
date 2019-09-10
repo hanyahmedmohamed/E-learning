@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "ViewDoctors";
+    E_LearningFCIH.DAL.Entities db = new E_LearningFCIH.DAL.Entities();
+    db.Configuration.ProxyCreationEnabled = false;
+    var result = db.Users.Where(y => y.UserGroupID == 2).Select(x => new { DisplayText = x.Username, Value = x.ID, Bio = x.Bio }).ToList();
+    string req = "";
+    var Currentusr = (E_LearningFCIH.DAL.User)Session["_CurrentFCIHUser"];
+    E_LearningFCIH.DAL.User_Doctor usr = new E_LearningFCIH.DAL.User_Doctor();
+}
+<script src="~/js/jquery.js"></script>
+<script type="text/javascript">
+    function ViewProfile(id){
+        $.ajax({
+            url: "/Students/changeProfile",
+            type: "POST",
+            data: { "ID": id}
+
+        });
+        window.location.href='/Students/Profile';
+    }
+
+    function changeRequestStatus(doctorID, status) {
+
+        $.ajax({
+            url: "/Students/changeRequestStatus",
+            type: "POST",
+            data: { "doctorID": doctorID, "status": status }
+
+        });
+
+    }
+</script>
+
+<h2>Doctors</h2>
+
+@foreach (var item in result)
+{
+    usr = db.User_Doctor.Where(x => x.UserID == Currentusr.ID && x.DoctorID == item.Value).FirstOrDefault();
+    <div class="jumbotron">
+
+
+                @if (usr != null)
+                {
+                    req = usr.Status;
+                }
+                else
+                {
+                    @*<a onclick="ViewProfile('@item.Value');"></a>*@
+                        <h3>@item.DisplayText </h3>
+                    
+             string bio=item.Bio != string.Empty ? item.Bio : "No Bio Available";
+            <h1>@item.Bio</h1>
+            <input type="button" name="name" value="Send Request" onclick="changeRequestStatus('@item.Value','Request');" />
+        }
+
+        @if (!string.IsNullOrEmpty(req))
+        {
+
+            <h3>@item.DisplayText</h3>
+            if (req.Trim() == "Request")
+            {
+                <h4 style="color:green">Requested</h4>
+            }
+            else if (req.Trim() == "Approve")
+            {
+                <h4 style="color:green">Approved</h4>
+                <input type="button" name="name" value="Confirm" onclick="changeRequestStatus('@item.Value','Confirm');" />
+            }
+            else if (req.Trim() == "Reject")
+            {
+                <h4 style="color:red">Rejected</h4>
+            }
+
+        }
+
+    </div>
+}

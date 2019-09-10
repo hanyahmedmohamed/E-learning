@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "Chat";
+    E_LearningFCIH.DAL.Entities entity = new E_LearningFCIH.DAL.Entities();
+    var usr = (E_LearningFCIH.DAL.User)Session["_CurrentFCIHUser"];
+    List<int> userSubjects = entity.User_Subject.Where(x => x.UserID == usr.ID).Select(x => x.SubjectID).ToList();
+    var subjects=entity.Subjects.Where(x => userSubjects.Contains(x.ID)).ToList();
+}
+<script src="~/js/jquery.js"></script>
+<script src="~/jqwidgets/jqx-all.js"></script>
+<script src="~/jqwidgets/jqxcore.js"></script>
+<script src="~/jqwidgets/jqxdata.export.js"></script>
+<script src="~/jqwidgets/jqxdata.js"></script>
+<script src="~/jqwidgets/jqxdatatable.js"></script>
+<script src="~/jqwidgets/jqxdate.js"></script>
+<script src="~/jqwidgets/jqxlayout.js"></script>
+<script src="~/jqwidgets/jqxlistbox.js"></script>
+<script src="~/jqwidgets/jqxloader.js"></script>
+<script src="~/jqwidgets/jqxmenu.js"></script>
+<script src="~/jqwidgets/jqxribbon.js"></script>
+<script src="~/jqwidgets/jqxsplitter.js"></script>
+<script type="text/javascript">
+    function SendMsg() {
+        var subjectID = document.getElementById('sbjct');
+        var newMsg=document.getElementById('newMsg');
+        //SendMessage(string msg, string subjectID)
+        if (subjectID.value != "0") {
+
+            $.ajax({
+                url: "/Chat/SendMessage",
+                type: "POST",
+                data: { "msg": newMsg.value, "subjectID": subjectID.value },
+                success: (function (Result) {
+
+                    Chat();
+                })
+            });
+        
+        }
+
+    }
+    function Chat() {
+        var subjectID= document.getElementById('sbjct');
+        
+        if (subjectID.value != "0") {
+            $.ajax({
+                url: "/Chat/getMessages",
+                type: "POST",
+                data: { "subjectID": subjectID.value },
+                success: (function (Result) {
+                    var recieversData = Result.Result;
+                    var recieverSource = {
+                        datatype: "json",
+                        datafields: [{ name: 'MessageBody' }, { name: 'ID' }, ],
+                        localdata: recieversData
+                    };
+                    var recieverdapter = new $.jqx.dataAdapter(recieverSource);
+
+                    $("#lstChat").jqxListBox({ checkboxes: false, filterable: true, source: recieverdapter, displayMember: "MessageBody", valueMember: "ID", width: '1000px', height: '400px' });
+                })
+
+            });
+        } 
+    }
+</script>
+<h2>Chat</h2>
+
+<select id="sbjct" onchange="Chat();">
+    <option value="0">Select</option>
+    @foreach (var item in subjects)
+    {
+        <option onchange="Chat();" value="@item.ID">@item.SubjectNames </option>
+    }
+
+</select>
+
+<div id="lstChat"  style="background-color:white;width:800px" name="lstMailGroupList"></div><br/>
+<input type="text" style="width:800px" name="newMsg" id="newMsg" />
+<input type="button" name="btn" id="btn" value="Send" onclick="SendMsg();"/>

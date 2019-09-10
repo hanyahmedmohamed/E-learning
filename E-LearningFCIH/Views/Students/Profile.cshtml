@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "Profile";
+    E_LearningFCIH.DAL.User user  = (E_LearningFCIH.DAL.User )Session["_ProfileID"];
+    
+    
+}
+
+<h2>Profile</h2>
+
+@user.Username <br/>
+Stuff <br />
+@user.Bio <br />
+@user.Phone <br />
+

@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+
+
+<div id="LecturesTable"></div>
+@section Scripts{
+
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <script src="~/Scripts/jtable/jquery.jtable.min.js"></script>
+
+    <link href="~/Scripts/jtable/themes/metro/blue/jtable.css" rel="stylesheet" />
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#LecturesTable').jtable({
+            title: 'The Lecture List',
+            paging: true, //Enable paging
+            pageSize: 10, //Set page size (default: 10)
+            sorting: true, //Enable sorting
+            defaultSorting: 'Name ASC', //Set default sorting
+            actions: {
+                listAction: '/Lectures/GetLectures',
+                deleteAction: '/Lectures/Delete',
+                updateAction: '/Lectures/Update',
+                createAction: '/Lectures/Create'
+            },
+            fields: {
+                ID: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                Title: {
+                    title: 'Name',
+                    width: '23%'
+                },
+               
+                Link: {
+                    title: 'Link',
+                    width: '12%'
+                },
+               
+                SubjectID: {
+                    title: 'Subject',
+                    width: '12%',
+                    options: '/Lectures/GetSubjects'
+                },
+                DrID: {
+                    title: 'Doctor',
+                    width: '12%',
+                    options: '/Lectures/GetDrs'
+                },
+                StartsOn: {
+                    title: 'Starts On',
+                    width: '15%',
+                    type: 'date',
+                    displayFormat: 'yy-mm-dd'
+                },
+                EndsOn: {
+                    title: 'Ends On',
+                    width: '15%',
+                    type: 'date',
+                    displayFormat: 'yy-mm-dd'
+                },
+               
+            }
+        });
+
+        //Load student list from server
+        $('#LecturesTable').jtable('load');
+    });
+
+    </script>
+}
